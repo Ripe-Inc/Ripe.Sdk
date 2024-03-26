@@ -7,6 +7,9 @@
     <PackageIcon>logox128.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageReleaseNotes>Initial Release</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/matt-andrews/Ripe.Sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/matt-andrews/Ripe.Sdk</RepositoryUrl>
+    <Description>A dotnet standard library for enabling dependency injection with Ripe.Sdk.Core</Description>
   </PropertyGroup>
 
   <ItemGroup>

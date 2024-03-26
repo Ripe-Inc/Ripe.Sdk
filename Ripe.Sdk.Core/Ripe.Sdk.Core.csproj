@@ -8,6 +8,8 @@
 	  <PackageIcon>logox128.png</PackageIcon>
 	  <PackageReleaseNotes>Initial release</PackageReleaseNotes>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageProjectUrl>https://github.com/matt-andrews/Ripe.Sdk</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/matt-andrews/Ripe.Sdk</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
