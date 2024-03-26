@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using Ripe.Sdk.Core;
 using Ripe.Sdk.DependencyInjection;
@@ -12,12 +14,13 @@ namespace Ripe.Sdk.Tests
         [Test]
         public void VerifyExpiry()
         {
-            var sdk = new RipeSdk<MockRipeConfig>(options =>
+            var sdk = new RipeSdk<MockRipeConfig>((httpClient, options) =>
             {
+                httpClient.AssignHttpClientMessageHandler(new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig()));
                 options.Uri = "https://test.com";
                 options.ApiKey = "rpri_testkey";
                 options.Version = "1.0.0.0";
-            }, new HttpClient(new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig())));
+            });
             var config = sdk.Hydrate();
             Assert.That(sdk.Expiry, Is.GreaterThan(DateTime.Now.AddSeconds(290)));
             Assert.That(sdk.Expiry, Is.LessThan(DateTime.Now.AddSeconds(310)));
@@ -25,12 +28,13 @@ namespace Ripe.Sdk.Tests
         [Test]
         public async Task VerifyExpiryAsync()
         {
-            var sdk = new RipeSdk<MockRipeConfig>(options =>
+            var sdk = new RipeSdk<MockRipeConfig>((httpClient, options) =>
             {
+                httpClient.AssignHttpClientMessageHandler(new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig()));
                 options.Uri = "https://test.com";
                 options.ApiKey = "rpri_testkey";
                 options.Version = "1.0.0.0";
-            }, new HttpClient(new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig())));
+            });
             var config = await sdk.HydrateAsync();
             Assert.That(sdk.Expiry, Is.GreaterThan(DateTime.Now.AddSeconds(290)));
             Assert.That(sdk.Expiry, Is.LessThan(DateTime.Now.AddSeconds(310)));
@@ -39,12 +43,13 @@ namespace Ripe.Sdk.Tests
         public async Task VerifyRequestSchemaAsync()
         {
             var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig());
-            var sdk = new RipeSdk<MockRipeConfig>(options =>
+            var sdk = new RipeSdk<MockRipeConfig>((httpClient, options) =>
             {
+                httpClient.AssignHttpClientMessageHandler(requestHandler);
                 options.Uri = "https://test.com";
                 options.ApiKey = "rpri_testkey";
                 options.Version = "1.0.0.0";
-            }, new HttpClient(requestHandler));
+            });
             var config = await sdk.HydrateAsync();
 
             Assert.That(requestHandler.Request?.Content, Is.Not.Null);
@@ -68,12 +73,13 @@ namespace Ripe.Sdk.Tests
         public void VerifyRequestSchema()
         {
             var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig());
-            var sdk = new RipeSdk<MockRipeConfig>(options =>
+            var sdk = new RipeSdk<MockRipeConfig>((httpClient, options) =>
             {
+                httpClient.AssignHttpClientMessageHandler(requestHandler);
                 options.Uri = "https://test.com";
                 options.ApiKey = "rpri_testkey";
                 options.Version = "1.0.0.0";
-            }, new HttpClient(requestHandler));
+            });
             var config = sdk.Hydrate();
 
             Assert.That(requestHandler.Request?.Content, Is.Not.Null);
@@ -142,7 +148,7 @@ namespace Ripe.Sdk.Tests
             {
                 Assert.That(tryChildValue2, Is.True);
                 Assert.That(childValue2, Is.EqualTo("World"));
-            }); 
+            });
             bool tryChild1Value1 = provider.TryGet("Child1:Value1", out string? child1Value1);
             Assert.Multiple(() =>
             {
@@ -160,12 +166,84 @@ namespace Ripe.Sdk.Tests
             {
                 Assert.That(tryChildChild2Value1, Is.True);
                 Assert.That(childChild2Value1, Is.EqualTo("I"));
-            }); 
+            });
             bool tryChildChild2Value2 = provider.TryGet("Child:Child2:Value2", out string? childChild2Value2);
             Assert.Multiple(() =>
             {
                 Assert.That(tryChildChild2Value2, Is.True);
                 Assert.That(childChild2Value2, Is.EqualTo("Am"));
+            });
+        }
+
+        [Test]
+        public void TestExtensionSetup()
+        {
+            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig() { TimeToLive = 0 });
+            var services = new ServiceCollection();
+            var config = new ConfigurationBuilder()
+                .AddRipe<MockRipeConfig>(services, (httpClient, options) =>
+                {
+                    httpClient.AssignHttpClientMessageHandler(requestHandler);
+                    options.Uri = "https://test.com";
+                    options.ApiKey = "rpri_testkey";
+                    options.Version = "1.0.0.0";
+                })
+                .Build();
+            var provider = services.BuildServiceProvider();
+            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            configService.Hydrate();
+            configService.Hydrate();
+            configService.Hydrate();
+            Assert.That(requestHandler.Count, Is.EqualTo(5));
+        }
+        [Test]
+        public async Task TestExtensionSetupAsync()
+        {
+            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig() { TimeToLive = 0 });
+            var services = new ServiceCollection();
+            var config = new ConfigurationBuilder()
+                .AddRipe<MockRipeConfig>(services, (httpClient, options) =>
+                {
+                    httpClient.AssignHttpClientMessageHandler(requestHandler);
+                    options.Uri = "https://test.com";
+                    options.ApiKey = "rpri_testkey";
+                    options.Version = "1.0.0.0";
+                })
+                .Build();
+            var provider = services.BuildServiceProvider();
+            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            await configService.HydrateAsync();
+            await configService.HydrateAsync();
+            await configService.HydrateAsync();
+            Assert.That(requestHandler.Count, Is.EqualTo(5));
+        }
+        [Test]
+        public async Task TestExtensionSetupAsync_NewDataIncoming()
+        {
+            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig() { TimeToLive = 0 });
+            var services = new ServiceCollection();
+            var config = new ConfigurationBuilder()
+                .AddRipe<MockRipeConfig>(services, (httpClient, options) =>
+                {
+                    httpClient.AssignHttpClientMessageHandler(requestHandler);
+                    options.Uri = "https://test.com";
+                    options.ApiKey = "rpri_testkey";
+                    options.Version = "1.0.0.0";
+                })
+                .Build();
+
+            var provider = services.BuildServiceProvider();
+            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configObj = await configService.HydrateAsync();
+            Assert.That(configObj.TimeToLive, Is.EqualTo(0));
+            
+            // Assert that changes are reflected in the hydrated obj immediately
+            requestHandler.ResponseContent = new MockRipeConfig() { TimeToLive = 300 };
+            configObj = await configService.HydrateAsync();
+            Assert.Multiple(() =>
+            {
+                Assert.That(configObj.TimeToLive, Is.EqualTo(300));
+                Assert.That(configService.Expiry, Is.GreaterThan(DateTime.Now));
             });
         }
     }

@@ -47,17 +47,20 @@ namespace Ripe.Sdk.Core
         private readonly HttpClient _httpClient;
         private TConfig _cache;
 
-        public RipeSdk(Action<IRipeOptions> optionsBuilder, HttpClient httpClient = null)
+        public RipeSdk(Action<IRipeOptions> optionsBuilder)
+            : this((httpClient, options) => optionsBuilder.Invoke(options)) { }
+
+        public RipeSdk(Action<HttpClient, IRipeOptions> optionsBuilder)
         {
+            _httpClient = new HttpClient();
             var options = new RipeOptions();
-            optionsBuilder(options);
+            optionsBuilder(_httpClient, options);
             if (!options.Validate())
             {
                 return;
             }
 
             _options = options;
-            _httpClient = httpClient ?? new HttpClient();
             _httpClient.DefaultRequestHeaders.Add("x-ripe-key", options.ApiKey);
         }
 

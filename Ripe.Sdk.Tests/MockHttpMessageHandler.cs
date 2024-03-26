@@ -7,16 +7,18 @@ namespace Ripe.Sdk.Tests
         : HttpMessageHandler
     {
         private readonly HttpStatusCode _statusCode = statusCode;
-        private readonly object? _responseContent = responseContent;
+        public object? ResponseContent { get; set; } = responseContent;
+        public int Count { get; private set; }
         public HttpRequestMessage? Request { get; private set; }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             Request = request;
+            Count++;
             return await Task.FromResult(new HttpResponseMessage
             {
                 StatusCode = _statusCode,
-                Content = JsonContent.Create(new { Data = _responseContent })
+                Content = JsonContent.Create(new { Data = ResponseContent })
             });
         }
     }

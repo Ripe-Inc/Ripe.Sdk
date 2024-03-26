@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Ripe.Sdk.Core;
 using System;
+using System.Net.Http;
 
 namespace Ripe.Sdk.DependencyInjection
 {
@@ -14,7 +15,7 @@ namespace Ripe.Sdk.DependencyInjection
         /// <param name="builder"></param>
         /// <param name="optionsBuilder">The options you use to connect to Ripe</param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, Action<IRipeOptions> optionsBuilder)
+        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, Action<HttpClient, IRipeOptions> optionsBuilder)
             where TConfig : class, IRipeConfiguration
         {
             RipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
@@ -31,7 +32,7 @@ namespace Ripe.Sdk.DependencyInjection
         /// <param name="services"></param>
         /// <param name="optionsBuilder">The options you use to connect to Ripe</param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, IServiceCollection services, Action<IRipeOptions> optionsBuilder)
+        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, IServiceCollection services, Action<HttpClient, IRipeOptions> optionsBuilder)
             where TConfig : class, IRipeConfiguration
         {
             return builder.AddRipe<TConfig>(services, optionsBuilder, out _);
@@ -47,7 +48,7 @@ namespace Ripe.Sdk.DependencyInjection
         /// <param name="optionsBuilder">The options you use to connect to Ripe</param>
         /// <param name="bindingObj">An out parameter returning the configuration object to be reused in your app setup</param>
         /// <returns></returns>
-        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, IServiceCollection services, Action<IRipeOptions> optionsBuilder, out TConfig bindingObj)
+        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, IServiceCollection services, Action<HttpClient, IRipeOptions> optionsBuilder, out TConfig bindingObj)
             where TConfig : class, IRipeConfiguration
         {
             RipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
