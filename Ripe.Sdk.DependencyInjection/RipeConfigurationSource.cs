@@ -7,9 +7,9 @@ namespace Ripe.Sdk.DependencyInjection
     internal class RipeConfigurationSource<T> : IConfigurationSource
         where T : class, IRipeConfiguration
     {
-        private readonly RipeSdk<T> _sdk;
+        private readonly IRipeSdk<T> _sdk;
 
-        public RipeConfigurationSource(RipeSdk<T> sdk)
+        public RipeConfigurationSource(IRipeSdk<T> sdk)
         {
             _sdk = sdk;
         }
@@ -18,12 +18,13 @@ namespace Ripe.Sdk.DependencyInjection
             return new RipeConfigurationProvider<T>(_sdk);
         }
     }
-    internal class RipeConfigurationProvider<T> : ConfigurationProvider
+
+    public class RipeConfigurationProvider<T> : ConfigurationProvider
         where T : class, IRipeConfiguration
     {
-        private readonly RipeSdk<T> _sdk;
+        private readonly IRipeSdk<T> _sdk;
 
-        public RipeConfigurationProvider(RipeSdk<T> sdk)
+        public RipeConfigurationProvider(IRipeSdk<T> sdk)
         {
             _sdk = sdk;
         }

@@ -10,6 +10,7 @@
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageProjectUrl>https://github.com/matt-andrews/Ripe.Sdk</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/matt-andrews/Ripe.Sdk</RepositoryUrl>
+	  <Description>A dotnet standard library for interfacing with Ripe Config </Description>
   </PropertyGroup>
 
   <ItemGroup>
