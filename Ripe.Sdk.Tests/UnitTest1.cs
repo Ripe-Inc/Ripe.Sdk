@@ -54,11 +54,15 @@ namespace Ripe.Sdk.Tests
             Assert.That(requestObj["Version"]?.ToString(), Is.EqualTo("1.0.0.0"));
             var schema = JsonSerializer.Deserialize<string[]>(requestObj["Schema"]);
             Assert.That(schema, Is.Not.Null);
-            Assert.That(schema, Has.Length.EqualTo(4));
+            Assert.That(schema, Has.Length.EqualTo(8));
             Assert.That(schema, Does.Contain("TimeToLive"));
             Assert.That(schema, Does.Contain("ApiVersion"));
-            Assert.That(schema, Does.Contain("Child.Child1"));
-            Assert.That(schema, Does.Contain("Child.Child2"));
+            Assert.That(schema, Does.Contain("Child.Value1"));
+            Assert.That(schema, Does.Contain("Child.Value2"));
+            Assert.That(schema, Does.Contain("Child1.Value1"));
+            Assert.That(schema, Does.Contain("Child1.Value2"));
+            Assert.That(schema, Does.Contain("Child.Child2.Value1"));
+            Assert.That(schema, Does.Contain("Child.Child2.Value2"));
         }
         [Test]
         public void VerifyRequestSchema()
@@ -79,11 +83,15 @@ namespace Ripe.Sdk.Tests
             Assert.That(requestObj["Version"]?.ToString(), Is.EqualTo("1.0.0.0"));
             var schema = JsonSerializer.Deserialize<string[]>(requestObj["Schema"]);
             Assert.That(schema, Is.Not.Null);
-            Assert.That(schema, Has.Length.EqualTo(4));
+            Assert.That(schema, Has.Length.EqualTo(8));
             Assert.That(schema, Does.Contain("TimeToLive"));
             Assert.That(schema, Does.Contain("ApiVersion"));
-            Assert.That(schema, Does.Contain("Child.Child1"));
-            Assert.That(schema, Does.Contain("Child.Child2"));
+            Assert.That(schema, Does.Contain("Child.Value1"));
+            Assert.That(schema, Does.Contain("Child.Value2"));
+            Assert.That(schema, Does.Contain("Child1.Value1"));
+            Assert.That(schema, Does.Contain("Child1.Value2"));
+            Assert.That(schema, Does.Contain("Child.Child2.Value1"));
+            Assert.That(schema, Does.Contain("Child.Child2.Value2"));
         }
         [Test]
         public void TestConfigurationProvider()
@@ -94,8 +102,18 @@ namespace Ripe.Sdk.Tests
                 ApiVersion = "123",
                 Child = new()
                 {
-                    Child1 = "Hello",
-                    Child2 = "World"
+                    Value1 = "Hello",
+                    Value2 = "World",
+                    Child2 = new()
+                    {
+                        Value1 = "I",
+                        Value2 = "Am"
+                    }
+                },
+                Child1 = new()
+                {
+                    Value1 = "Ripe",
+                    Value2 = "Config"
                 }
             });
 
@@ -113,17 +131,41 @@ namespace Ripe.Sdk.Tests
                 Assert.That(tryApiVersion, Is.True);
                 Assert.That(apiVersion, Is.EqualTo("123"));
             });
-            bool tryChild1 = provider.TryGet("Child:Child1", out string? child1);
+            bool tryChildValue1 = provider.TryGet("Child:Value1", out string? childValue1);
             Assert.Multiple(() =>
             {
-                Assert.That(tryChild1, Is.True);
-                Assert.That(child1, Is.EqualTo("Hello"));
+                Assert.That(tryChildValue1, Is.True);
+                Assert.That(childValue1, Is.EqualTo("Hello"));
             });
-            bool tryChild2 = provider.TryGet("Child:Child2", out string? child2);
+            bool tryChildValue2 = provider.TryGet("Child:Value2", out string? childValue2);
             Assert.Multiple(() =>
             {
-                Assert.That(tryChild2, Is.True);
-                Assert.That(child2, Is.EqualTo("World"));
+                Assert.That(tryChildValue2, Is.True);
+                Assert.That(childValue2, Is.EqualTo("World"));
+            }); 
+            bool tryChild1Value1 = provider.TryGet("Child1:Value1", out string? child1Value1);
+            Assert.Multiple(() =>
+            {
+                Assert.That(tryChild1Value1, Is.True);
+                Assert.That(child1Value1, Is.EqualTo("Ripe"));
+            });
+            bool tryChild1Value2 = provider.TryGet("Child1:Value2", out string? child1Value2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(tryChild1Value2, Is.True);
+                Assert.That(child1Value2, Is.EqualTo("Config"));
+            });
+            bool tryChildChild2Value1 = provider.TryGet("Child:Child2:Value1", out string? childChild2Value1);
+            Assert.Multiple(() =>
+            {
+                Assert.That(tryChildChild2Value1, Is.True);
+                Assert.That(childChild2Value1, Is.EqualTo("I"));
+            }); 
+            bool tryChildChild2Value2 = provider.TryGet("Child:Child2:Value2", out string? childChild2Value2);
+            Assert.Multiple(() =>
+            {
+                Assert.That(tryChildChild2Value2, Is.True);
+                Assert.That(childChild2Value2, Is.EqualTo("Am"));
             });
         }
     }
@@ -133,10 +175,22 @@ namespace Ripe.Sdk.Tests
         public int TimeToLive { get; set; } = 300;
         public string ApiVersion { get; set; } = "";
         public MockRipeConfigChild Child { get; set; } = new();
+        public MockRipeConfigChild1 Child1 { get; set; } = new();
     }
     public class MockRipeConfigChild
     {
-        public string Child1 { get; set; } = "";
-        public string Child2 { get; set; } = "";
+        public string Value1 { get; set; } = "";
+        public string Value2 { get; set; } = "";
+        public MockRipeConfigChild2 Child2 { get; set; } = new();
+    }
+    public class MockRipeConfigChild1
+    {
+        public string Value1 { get; set; } = "";
+        public string Value2 { get; set; } = "";
+    }
+    public class MockRipeConfigChild2
+    {
+        public string Value1 { get; set; } = "";
+        public string Value2 { get; set; } = "";
     }
 }

@@ -12,7 +12,7 @@ namespace Ripe.Sdk.Core
     /// Connect to the Ripe API to get your centralized configuration. <code>Note:</code> This class should only be 
     /// initialized once per lifetime of the application, and either stored as a static variable, or injected as a singleton.
     /// </summary>
-    /// <typeparam name="TConfig"></typeparam>
+    /// <typeparam name="TConfig">Your implementation of <see cref="IRipeConfiguration"/></typeparam>
     public interface IRipeSdk<TConfig>
         where TConfig : class, IRipeConfiguration
     {
@@ -27,10 +27,7 @@ namespace Ripe.Sdk.Core
         /// <returns>Your configuration object</returns>
         Task<TConfig> HydrateAsync();
 
-        /// <summary>
-        /// Refreshes your configuration object and returns the result
-        /// </summary>
-        /// <returns>Your configuration object</returns>
+        /// <inheritdoc cref="HydrateAsync"/>
         TConfig Hydrate();
     }
 
@@ -38,7 +35,7 @@ namespace Ripe.Sdk.Core
     /// Connect to the Ripe API to get your centralized configuration. <code>Note:</code> This class should only be 
     /// initialized once per lifetime of the application, and either stored as a static variable, or injected as a singleton.
     /// </summary>
-    /// <typeparam name="TConfig"></typeparam>
+    /// <typeparam name="TConfig">Your implementation of <see cref="IRipeConfiguration"/></typeparam>
     public class RipeSdk<TConfig> : IRipeSdk<TConfig>
         where TConfig : class, IRipeConfiguration
     {
@@ -85,8 +82,8 @@ namespace Ripe.Sdk.Core
                     Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
                 };
 
-                HttpResponseMessage response = await _httpClient.SendAsync(msg);
-                string content = await response.Content.ReadAsStringAsync();
+                HttpResponseMessage response = await _httpClient.SendAsync(msg).ConfigureAwait(false);
+                string content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 if (response.IsSuccessStatusCode)
                 {
                     var obj = JsonSerializer.Deserialize<HydrationResponse<TConfig>>(content, _serializerOptions)

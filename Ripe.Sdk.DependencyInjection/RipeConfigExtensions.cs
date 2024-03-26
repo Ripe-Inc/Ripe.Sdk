@@ -34,15 +34,7 @@ namespace Ripe.Sdk.DependencyInjection
         public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, IServiceCollection services, Action<IRipeOptions> optionsBuilder)
             where TConfig : class, IRipeConfiguration
         {
-            RipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
-            builder.Add(new RipeConfigurationSource<TConfig>(sdk));
-            services.AddScoped(async provider =>
-            {
-                var hydrate = provider.GetRequiredService<RipeSdk<TConfig>>();
-                return await hydrate.HydrateAsync();
-            });
-            services.AddSingleton(sdk);
-            return builder;
+            return builder.AddRipe<TConfig>(services, optionsBuilder, out _);
         }
 
         /// <summary>
