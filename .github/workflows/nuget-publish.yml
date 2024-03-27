@@ -25,7 +25,9 @@ jobs:
         with:
           source-url: ${{ secrets.NUGET_SOURCE_URL }}
           dotnet-version: ${{ env.DOTNET_VERSION }}
-          
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
       - name: Build solution and generate NuGet package
         run: |  
           cd ./${{ env.ENV_PROJECT_CORE }}
