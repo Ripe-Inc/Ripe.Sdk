@@ -6,7 +6,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-  
+
 env:
   ENV_PROJECT_CORE: '/Ripe.Sdk.Core'
   ENV_PROJECT_DI: '/Ripe.Sdk.DependencyInjection' 
@@ -23,9 +23,9 @@ jobs:
       - name: Setup .NET Core @ Latest
         uses: actions/setup-dotnet@v1
         with:
-          source-url: ${{secrets.NUGET_SOURCE_URL}}
+          source-url: ${{ secrets.NUGET_SOURCE_URL }}
         env:
-          NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}        
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}        
           
       - name: Build solution and generate NuGet package
         run: |  
@@ -33,5 +33,5 @@ jobs:
 
       - name: Push generated package to nuget registry
         run: |
-          dotnet nuget push ./{{env.ENV_PROJECT_CORE}}/out/*.nupkg --skip-duplicate --no-symbols true
-          dotnet nuget push ./{{env.ENV_PROJECT_DI}}/out/*.nupkg --skip-duplicate --no-symbols true
+          dotnet nuget push ./${{ env.ENV_PROJECT_CORE }}/out/*.nupkg --skip-duplicate --no-symbols true
+          dotnet nuget push ./${{ env.ENV_PROJECT_DI }}/out/*.nupkg --skip-duplicate --no-symbols true
