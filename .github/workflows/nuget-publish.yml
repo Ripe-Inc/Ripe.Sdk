@@ -25,8 +25,6 @@ jobs:
         with:
           source-url: ${{ secrets.NUGET_SOURCE_URL }}
           dotnet-version: ${{ env.DOTNET_VERSION }}
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}        
           
       - name: Build solution and generate NuGet package
         run: |  
@@ -35,4 +33,4 @@ jobs:
 
       - name: Push generated package to nuget registry
         run: |
-          dotnet nuget push ./${{ env.ENV_PROJECT_CORE }}/out/*.nupkg --skip-duplicate --no-symbols true
+          dotnet nuget push ./${{ env.ENV_PROJECT_CORE }}/out/*.nupkg --skip-duplicate --no-symbols true --api-key ${{ secrets.NUGET_AUTH_TOKEN }}
