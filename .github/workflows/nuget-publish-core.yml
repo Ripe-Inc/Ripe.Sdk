@@ -1,0 +1,40 @@
+name: NuGet Publish Core
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+    paths:
+      - Ripe.Sdk.Core/**
+  workflow_dispatch:
+
+env:
+  ENV_PROJECT_CORE: 'Ripe.Sdk.Core'
+  DOTNET_VERSION: '8.0.x' 
+
+jobs:
+  nuget-publish-core:
+    runs-on: ubuntu-latest
+    name: Publish NuGet Package
+    steps:
+
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
+
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+        uses: actions/setup-dotnet@v1
+        with:
+          source-url: ${{ secrets.NUGET_SOURCE_URL }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+      - name: Build solution and generate NuGet package
+        run: |  
+          cd ./${{ env.ENV_PROJECT_CORE }}
+          dotnet pack -c Release -o out  
+
+      - name: Push generated package to nuget registry
+        run: |
+          dotnet nuget push ./${{ env.ENV_PROJECT_CORE }}/out/*.nupkg --skip-duplicate --no-symbols --api-key ${{ secrets.NUGET_AUTH_TOKEN }}

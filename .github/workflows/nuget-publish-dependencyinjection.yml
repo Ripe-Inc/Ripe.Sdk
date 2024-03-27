@@ -1,18 +1,20 @@
-name: NuGet Publish Core
+name: NuGet Publish DependencyInjection
 
 on:
   pull_request:
     types: [closed]
     branches:
       - main
+    paths:
+      - Ripe.Sdk.DependencyInjection/**
   workflow_dispatch:
 
 env:
-  ENV_PROJECT_CORE: 'Ripe.Sdk.Core'
+  ENV_PROJECT_CORE: 'Ripe.Sdk.DependencyInjection'
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
-  nuget-publish:
+  nuget-publish-dependencyinjection:
     runs-on: ubuntu-latest
     name: Publish NuGet Package
     steps:
