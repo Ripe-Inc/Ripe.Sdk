@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://github.com/matt-andrews/Ripe.Sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/matt-andrews/Ripe.Sdk</RepositoryUrl>
     <Description>A dotnet standard library for enabling dependency injection with Ripe.Sdk.Core</Description>
+    <PackageTags>ripe, ripe config, dependency injection</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
