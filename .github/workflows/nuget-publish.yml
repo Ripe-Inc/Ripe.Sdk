@@ -35,4 +35,4 @@ jobs:
 
       - name: Push generated package to nuget registry
         run: |
-          dotnet nuget push ./${{ env.ENV_PROJECT_CORE }}/out/*.nupkg --skip-duplicate --no-symbols true --api-key ${{ secrets.NUGET_AUTH_TOKEN }}
+          dotnet nuget push ./out/*.nupkg --skip-duplicate --no-symbols true --api-key ${{ secrets.NUGET_AUTH_TOKEN }}
