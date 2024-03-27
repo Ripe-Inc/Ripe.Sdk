@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 env:
-  ENV_PROJECT_CORE: '/Ripe.Sdk.Core'
+  ENV_PROJECT_CORE: 'Ripe.Sdk.Core'
+  DOTNET_VERSION: '8.0.x' 
 
 jobs:
   nuget-publish:
@@ -16,19 +17,20 @@ jobs:
     name: Publish NuGet Package
     steps:
 
-      - name: Checkout repository
-        uses: actions/checkout@v1
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v2
 
-      - name: Setup .NET Core @ Latest
+      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
         uses: actions/setup-dotnet@v1
         with:
           source-url: ${{ secrets.NUGET_SOURCE_URL }}
+          dotnet-version: ${{ env.DOTNET_VERSION }}
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}        
           
       - name: Build solution and generate NuGet package
         run: |  
-          cd ${{ env.ENV_PROJECT_CORE }}
+          cd ./${{ env.ENV_PROJECT_CORE }}
           dotnet pack -c Release -o out  
 
       - name: Push generated package to nuget registry
