@@ -1,4 +1,4 @@
-name: NuGet Publish
+name: NuGet Publish Core
 
 on:
   pull_request:
@@ -9,7 +9,6 @@ on:
 
 env:
   ENV_PROJECT_CORE: '/Ripe.Sdk.Core'
-  ENV_PROJECT_DI: '/Ripe.Sdk.DependencyInjection' 
 
 jobs:
   nuget-publish:
@@ -29,9 +28,9 @@ jobs:
           
       - name: Build solution and generate NuGet package
         run: |  
+          cd ${{ env.ENV_PROJECT_CORE }}
           dotnet pack -c Release -o out  
 
       - name: Push generated package to nuget registry
         run: |
           dotnet nuget push ./${{ env.ENV_PROJECT_CORE }}/out/*.nupkg --skip-duplicate --no-symbols true
-          dotnet nuget push ./${{ env.ENV_PROJECT_DI }}/out/*.nupkg --skip-duplicate --no-symbols true
