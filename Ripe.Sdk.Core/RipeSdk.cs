@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace Ripe.Sdk.Core
@@ -42,7 +44,14 @@ namespace Ripe.Sdk.Core
         /// <inheritdoc/>
         public DateTime Expiry { get; private set; }
 
-        private readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        private readonly JsonSerializerOptions _serializerOptions = new JsonSerializerOptions()
+        {
+            PropertyNameCaseInsensitive = true,
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver()
+            {
+                Modifiers = { RipePropertyNameContract.Contract }
+            }
+        };
         private readonly IRipeOptions _options;
         private readonly HttpClient _httpClient;
         private TConfig _cache;
@@ -196,16 +205,24 @@ namespace Ripe.Sdk.Core
         /// <param name="prop"></param>
         private static void ExtractType(List<string> result, string root, PropertyInfo prop)
         {
+            string name = prop.Name;
+            var propNameAttr = prop.GetCustomAttribute<RipePropertyNameAttribute>();
+            if(propNameAttr != null)
+            {
+                name = propNameAttr.PropertyName;
+            }
+
             if (prop.PropertyType == typeof(string)
                 || prop.PropertyType == typeof(int)
                 || prop.PropertyType == typeof(decimal)
-                || prop.PropertyType == typeof(bool))
+                || prop.PropertyType == typeof(bool)
+                || typeof(IDictionary).IsAssignableFrom(prop.PropertyType))
             {
-                result.Add((root + "." + prop.Name).TrimStart('.'));
+                result.Add((root + "." + name).TrimStart('.'));
             }
             else
             {
-                root += "." + prop.Name;
+                root += "." + name;
                 var props = prop.PropertyType.GetProperties();
                 foreach (var propDeep in props)
                 {

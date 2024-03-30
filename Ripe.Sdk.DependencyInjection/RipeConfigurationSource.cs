@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Ripe.Sdk.Core;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Ripe.Sdk.DependencyInjection
@@ -48,7 +49,8 @@ namespace Ripe.Sdk.DependencyInjection
                 if (prop.PropertyType == typeof(string)
                     || prop.PropertyType == typeof(int)
                     || prop.PropertyType == typeof(decimal)
-                    || prop.PropertyType == typeof(bool))
+                    || prop.PropertyType == typeof(bool)
+                    || typeof(IDictionary).IsAssignableFrom(prop.PropertyType))
                 {
                     result.Add(GetPrefix(prefix, prop.Name), prop.GetValue(obj).ToString());
                 }

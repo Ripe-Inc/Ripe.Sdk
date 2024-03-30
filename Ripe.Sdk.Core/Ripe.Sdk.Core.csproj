@@ -1,35 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	  <Version>1.0.0.0</Version>
-	  <Title>Ripe Sdk Core</Title>
-	  <Authors>Matthew Andrews</Authors>
-	  <PackageIcon>logox128.png</PackageIcon>
-	  <PackageReleaseNotes>Initial release</PackageReleaseNotes>
-	  <PackageReadmeFile>README.md</PackageReadmeFile>
-	  <PackageProjectUrl>https://github.com/matt-andrews/Ripe.Sdk</PackageProjectUrl>
-	  <RepositoryUrl>https://github.com/matt-andrews/Ripe.Sdk</RepositoryUrl>
-	  <Description>A dotnet standard library for interfacing with Ripe Config </Description>
-	  <PackageTags>ripe, ripe config</PackageTags>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFrameworks>netstandard2.0;net6.0;net7.0;net8.0</TargetFrameworks>
+		<Version>1.1.0</Version>
+		<Title>Ripe Sdk Core</Title>
+		<Authors>Matthew Andrews</Authors>
+		<PackageIcon>logox128.png</PackageIcon>
+		<PackageReleaseNotes></PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/matt-andrews/Ripe.Sdk</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/matt-andrews/Ripe.Sdk</RepositoryUrl>
+		<Description>A dotnet standard library for interfacing with Ripe Config </Description>
+		<PackageTags>ripe, ripe config</PackageTags>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\logox128.png">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="..\logox128.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="System.Text.Json" Version="8.0.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="System.Text.Json" Version="8.*" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Update="README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 </Project>

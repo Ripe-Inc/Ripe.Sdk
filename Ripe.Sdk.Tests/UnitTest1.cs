@@ -190,7 +190,7 @@ namespace Ripe.Sdk.Tests
                 })
                 .Build();
             var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
             configService.Hydrate();
             configService.Hydrate();
             configService.Hydrate();
@@ -211,7 +211,7 @@ namespace Ripe.Sdk.Tests
                 })
                 .Build();
             var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
             await configService.HydrateAsync();
             await configService.HydrateAsync();
             await configService.HydrateAsync();
@@ -233,7 +233,7 @@ namespace Ripe.Sdk.Tests
                 .Build();
 
             var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
             var configObj = await configService.HydrateAsync();
             Assert.That(configObj.TimeToLive, Is.EqualTo(0));
             
@@ -245,6 +245,35 @@ namespace Ripe.Sdk.Tests
                 Assert.That(configObj.TimeToLive, Is.EqualTo(300));
                 Assert.That(configService.Expiry, Is.GreaterThan(DateTime.Now));
             });
+        }
+        [Test]
+        public async Task TestPropertyNameAttr_Outgoing()
+        {
+            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig2());
+            var sdk = new RipeSdk<MockRipeConfig2>((httpClient, options) =>
+            {
+                httpClient.AssignHttpClientMessageHandler(requestHandler);
+                options.Uri = "https://test.com";
+                options.ApiKey = "rpri_testkey";
+                options.Version = "1.0.0.0";
+            });
+            var config = await sdk.HydrateAsync();
+
+            Assert.That(requestHandler.Request?.Content, Is.Not.Null);
+            var requestContent = await requestHandler.Request.Content.ReadAsStringAsync();
+            var requestObj = JsonSerializer.Deserialize<JsonObject>(requestContent);
+            Assert.That(requestObj, Is.Not.Null);
+            Assert.That(requestObj["Version"]?.ToString(), Is.EqualTo("1.0.0.0"));
+            var schema = JsonSerializer.Deserialize<string[]>(requestObj["Schema"]);
+            Assert.That(schema, Is.Not.Null);
+            Assert.That(schema, Has.Length.EqualTo(7));
+            Assert.That(schema, Does.Contain("TimeToLive"));
+            Assert.That(schema, Does.Contain("ApiVersion"));
+            Assert.That(schema, Does.Contain("Test"));
+            Assert.That(schema, Does.Contain("Child.TestAttribute"));
+            Assert.That(schema, Does.Contain("Child.Dict"));
+            Assert.That(schema, Does.Contain("TestChild.TestAttribute"));
+            Assert.That(schema, Does.Contain("TestChild.Dict"));
         }
     }
 
@@ -270,5 +299,21 @@ namespace Ripe.Sdk.Tests
     {
         public string Value1 { get; set; } = "";
         public string Value2 { get; set; } = "";
+    }
+    public class MockRipeConfig2 : IRipeConfiguration
+    {
+        public int TimeToLive { get; set; } = 300;
+        public string ApiVersion { get; set; } = "";
+        [RipePropertyName("Test")]
+        public string TestAttribute { get; set; } = "";
+        public MockRipeConfig2Child Child { get; set; } = new();
+        [RipePropertyName("TestChild")]
+        public MockRipeConfig2Child Child2 { get; set; } = new();
+    }
+    public class MockRipeConfig2Child
+    {
+        [RipePropertyName("TestAttribute")]
+        public string Test { get; set; } = "";
+        public Dictionary<string, object> Dict { get; set; } = [];
     }
 }

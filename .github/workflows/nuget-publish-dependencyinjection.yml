@@ -1,4 +1,4 @@
-name: NuGet Publish DependencyInjection
+name: NuGet Build
 
 on:
   pull_request:
