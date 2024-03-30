@@ -18,7 +18,7 @@ namespace Ripe.Sdk.DependencyInjection
         public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, Action<HttpClient, IRipeOptions> optionsBuilder)
             where TConfig : class, IRipeConfiguration
         {
-            RipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
+            IRipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
             builder.Add(new RipeConfigurationSource<TConfig>(sdk));
             return builder;
         }
@@ -51,15 +51,31 @@ namespace Ripe.Sdk.DependencyInjection
         public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, IServiceCollection services, Action<HttpClient, IRipeOptions> optionsBuilder, out TConfig bindingObj)
             where TConfig : class, IRipeConfiguration
         {
-            RipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
+            IRipeSdk<TConfig> sdk = new RipeSdk<TConfig>(optionsBuilder);
             builder.Add(new RipeConfigurationSource<TConfig>(sdk));
-            services.AddScoped(async provider =>
+            services.AddScoped(provider =>
             {
-                var hydrate = provider.GetRequiredService<RipeSdk<TConfig>>();
-                return await hydrate.HydrateAsync();
+                var hydrate = provider.GetRequiredService<IRipeSdk<TConfig>>();
+                return hydrate.Hydrate();
             });
             bindingObj = sdk.Hydrate();
             services.AddSingleton(sdk);
+            return builder;
+        }
+
+        /// <summary>
+        /// Add the Ripe configuration to your <see cref="IConfiguration"/>
+        /// </summary>
+        /// <typeparam name="TConfig"></typeparam>
+        /// <param name="builder"></param>
+        /// <param name="sdk"></param>
+        /// <returns></returns>
+        public static IConfigurationBuilder AddRipe<TConfig>(this IConfigurationBuilder builder, RipeSdk<TConfig> sdk)
+            where TConfig : class, IRipeConfiguration
+        {
+            var ripeBuilder = new ConfigurationBuilder();
+            ripeBuilder.Add(new RipeConfigurationSource<TConfig>(sdk));
+            builder.AddConfiguration(ripeBuilder.Build());
             return builder;
         }
     }
