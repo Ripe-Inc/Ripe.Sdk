@@ -1,9 +1,17 @@
 # Ripe.Sdk.Core
 
+[![NuGet Build](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/nuget-publish.yml/badge.svg?branch=main)](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/nuget-publish.yml)
+[![Unit Tests](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/unit-tests.yml)
+
 The Ripe Core package includes the bare minimum to get started with Ripe, used mostly for Console and Desktop applications. If you're looking for 
 a package that supports modern dependency injection via the `IConfigurationBuilder`, then navigate [here](https://github.com/matt-andrews/Ripe.Sdk/tree/main/Ripe.Sdk.DependencyInjection)
 
 ## Getting Started
+Install Ripe.Sdk
+```
+dotnet add package Ripe.Sdk.Core
+```
+
 Create a class that will hold your configuration, inheriting from `IRipeConfiguration`:
 ```csharp
 public class Config : IRipeConfiguration

@@ -190,7 +190,7 @@ namespace Ripe.Sdk.Tests
                 })
                 .Build();
             var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
             configService.Hydrate();
             configService.Hydrate();
             configService.Hydrate();
@@ -211,7 +211,7 @@ namespace Ripe.Sdk.Tests
                 })
                 .Build();
             var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
             await configService.HydrateAsync();
             await configService.HydrateAsync();
             await configService.HydrateAsync();
@@ -233,7 +233,7 @@ namespace Ripe.Sdk.Tests
                 .Build();
 
             var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<RipeSdk<MockRipeConfig>>();
+            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
             var configObj = await configService.HydrateAsync();
             Assert.That(configObj.TimeToLive, Is.EqualTo(0));
             
