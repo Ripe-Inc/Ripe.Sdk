@@ -7,7 +7,7 @@ on:
       - '!main'
     paths:
       - dotnet/**
-      - dotnet-unit-tests.yml
+      - .github/workflows/dotnet-unit-tests.yml
   workflow_dispatch:
 
 env:
