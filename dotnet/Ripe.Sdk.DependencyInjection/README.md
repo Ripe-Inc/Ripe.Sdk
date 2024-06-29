@@ -1,7 +1,7 @@
 # Ripe.Sdk.DependencyInjection
 
-[![NuGet Build](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/nuget-publish-dependencyinjection.yml/badge.svg?branch=main)](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/nuget-publish-dependencyinjection.yml)
-[![Unit Tests](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/unit-tests.yml)
+[![NuGet Build](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/nuget-publish-dependencyinjection.yml/badge.svg)](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/nuget-publish-dependencyinjection.yml)
+[![Unit Tests](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/unit-tests.yml)
 
 The Ripe Dependency Injection package includes extensions for integrating with the `IConfigurationBuilder` during setup to pull your configuration 
 into `IConfiguration`, as well as inject your config as a scoped service which is automatically refreshed in regular intervals.

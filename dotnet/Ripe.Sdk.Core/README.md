@@ -1,7 +1,7 @@
 # Ripe.Sdk.Core
 
-[![NuGet Build](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/nuget-publish-core.yml/badge.svg?branch=main)](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/nuget-publish-core.yml)
-[![Unit Tests](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/matt-andrews/Ripe.Sdk/actions/workflows/unit-tests.yml)
+[![NuGet Build](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/nuget-publish-core.yml/badge.svg)](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/nuget-publish-core.yml)
+[![Unit Tests](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/unit-tests.yml)
 
 The Ripe Core package includes the bare minimum to get started with Ripe, used mostly for Console and Desktop applications. If you're looking for 
 a package that supports modern dependency injection via the `IConfigurationBuilder`, then navigate [here](https://github.com/matt-andrews/Ripe.Sdk/tree/main/Ripe.Sdk.DependencyInjection)

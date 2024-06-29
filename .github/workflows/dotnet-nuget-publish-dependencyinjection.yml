@@ -1,4 +1,4 @@
-name: NuGet Build
+name: Dotnet Ripe.Sdk.DependencyInjection NuGet Build
 
 on:
   pull_request:
@@ -6,11 +6,11 @@ on:
     branches:
       - main
     paths:
-      - Ripe.Sdk.DependencyInjection/**
+      - dotnet/Ripe.Sdk.DependencyInjection/**
   workflow_dispatch:
 
 env:
-  ENV_PROJECT_CORE: 'Ripe.Sdk.DependencyInjection'
+  ENV_PROJECT_CORE: 'dotnet/Ripe.Sdk.DependencyInjection'
   DOTNET_VERSION: '8.0.x' 
 
 jobs:

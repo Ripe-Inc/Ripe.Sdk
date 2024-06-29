@@ -1,18 +1,21 @@
-name: Unit Tests
+name: Dotnet Unit Tests
 
 on:
   push:
     branches:
       - '**'    
       - '!main'
+    paths:
+      - dotnet/**
+      - .github/workflows/dotnet-unit-tests.yml
   workflow_dispatch:
 
 env:
-  CSPROJ_PATH: '/Ripe.Sdk.Tests'
+  CSPROJ_PATH: 'dotnet/Ripe.Sdk.Tests'
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
-  run-unit-tests:
+  run-dotnet-unit-tests:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout GitHub Action'
@@ -26,12 +29,15 @@ jobs:
       - name: 'Install dependencies'
         shell: pwsh
         run: |
+          cd ${{ env.CSPROJ_PATH }}
           dotnet restore
       - name: 'Build'
         shell: pwsh
         run: |
+          cd ${{ env.CSPROJ_PATH }}
           dotnet build
       - name: 'Test'
         shell: pwsh
         run: |
+          cd ${{ env.CSPROJ_PATH }}
           dotnet test
