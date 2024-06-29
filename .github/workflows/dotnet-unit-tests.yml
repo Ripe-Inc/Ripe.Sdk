@@ -5,6 +5,8 @@ on:
     branches:
       - '**'    
       - '!main'
+    paths:
+      - dotnet/**
   workflow_dispatch:
 
 env:
@@ -26,12 +28,15 @@ jobs:
       - name: 'Install dependencies'
         shell: pwsh
         run: |
+          cd ${{ env.CSPROJ_PATH }}
           dotnet restore
       - name: 'Build'
         shell: pwsh
         run: |
+          cd ${{ env.CSPROJ_PATH }}
           dotnet build
       - name: 'Test'
         shell: pwsh
         run: |
+          cd ${{ env.CSPROJ_PATH }}
           dotnet test
