@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Dotnet Unit Tests
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  CSPROJ_PATH: '/Ripe.Sdk.Tests'
+  CSPROJ_PATH: 'dotnet/Ripe.Sdk.Tests'
   DOTNET_VERSION: '8.0.x' 
 
 jobs:
