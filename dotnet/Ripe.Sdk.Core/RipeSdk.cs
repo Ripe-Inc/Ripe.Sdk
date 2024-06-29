@@ -55,10 +55,16 @@ namespace Ripe.Sdk.Core
         private readonly IRipeOptions _options;
         private readonly HttpClient _httpClient;
         private TConfig _cache;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RipeSdk{TConfig}"/> class.
+        /// </summary>
+        /// <param name="optionsBuilder">Builder to configure options</param>
         public RipeSdk(Action<IRipeOptions> optionsBuilder)
             : this((httpClient, options) => optionsBuilder.Invoke(options)) { }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RipeSdk{TConfig}"/> class.
+        /// </summary>
+        /// <param name="optionsBuilder">Builder to configure options with a custom <see cref="HttpClient"/></param>
         public RipeSdk(Action<HttpClient, IRipeOptions> optionsBuilder)
         {
             _httpClient = new HttpClient();
@@ -183,7 +189,7 @@ namespace Ripe.Sdk.Core
         }
 
         /// <summary>
-        /// Gets the Ripe config schema based on the properties in the <see cref="TConfig"/> derrived type
+        /// Gets the Ripe config schema based on the properties in the derrived type
         /// </summary>
         /// <returns></returns>
         private string[] GetSchema()
