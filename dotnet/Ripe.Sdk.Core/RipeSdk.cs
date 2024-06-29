@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -109,7 +109,7 @@ namespace Ripe.Sdk.Core
                     if (obj.Data != null)
                     {
                         _cache = obj.Data;
-                        Expiry = DateTime.Now.AddSeconds(_cache.TimeToLive);
+                        Expiry = DateTime.Now.AddSeconds(_options.CacheExpiry);
                     }
                 }
                 else
@@ -157,7 +157,7 @@ namespace Ripe.Sdk.Core
                     if (obj.Data != null)
                     {
                         _cache = obj.Data;
-                        Expiry = DateTime.Now.AddSeconds(_cache.TimeToLive);
+                        Expiry = DateTime.Now.AddSeconds(_options.CacheExpiry);
                     }
                 }
                 else
