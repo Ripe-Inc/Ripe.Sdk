@@ -17,7 +17,6 @@ Create a class that will hold your configuration, inheriting from `IRipeConfigur
 public class Config : IRipeConfiguration
 {
 	public string TestConfig { get; set; }
-	public int TimeToLive { get; set; }
 	public string ApiVersion { get; set; }
 }
 ```
