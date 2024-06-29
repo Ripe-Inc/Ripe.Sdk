@@ -4,7 +4,7 @@
 [![Unit Tests](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/Ripe-Inc/ripe-sdks/actions/workflows/unit-tests.yml)
 
 The Ripe Core package includes the bare minimum to get started with Ripe, used mostly for Console and Desktop applications. If you're looking for 
-a package that supports modern dependency injection via the `IConfigurationBuilder`, then navigate [here](https://github.com/matt-andrews/Ripe.Sdk/tree/main/Ripe.Sdk.DependencyInjection)
+a package that supports modern dependency injection via the `IConfigurationBuilder`, then navigate [here](../Ripe.Sdk.DependencyInjection/README.md)
 
 ## Getting Started
 Install Ripe.Sdk
