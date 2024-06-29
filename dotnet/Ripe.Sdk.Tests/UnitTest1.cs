@@ -59,8 +59,7 @@ namespace Ripe.Sdk.Tests
             Assert.That(requestObj["Version"]?.ToString(), Is.EqualTo("1.0.0.0"));
             var schema = JsonSerializer.Deserialize<string[]>(requestObj["Schema"]);
             Assert.That(schema, Is.Not.Null);
-            Assert.That(schema, Has.Length.EqualTo(8));
-            Assert.That(schema, Does.Contain("TimeToLive"));
+            Assert.That(schema, Has.Length.EqualTo(7));
             Assert.That(schema, Does.Contain("ApiVersion"));
             Assert.That(schema, Does.Contain("Child.Value1"));
             Assert.That(schema, Does.Contain("Child.Value2"));
@@ -89,8 +88,7 @@ namespace Ripe.Sdk.Tests
             Assert.That(requestObj["Version"]?.ToString(), Is.EqualTo("1.0.0.0"));
             var schema = JsonSerializer.Deserialize<string[]>(requestObj["Schema"]);
             Assert.That(schema, Is.Not.Null);
-            Assert.That(schema, Has.Length.EqualTo(8));
-            Assert.That(schema, Does.Contain("TimeToLive"));
+            Assert.That(schema, Has.Length.EqualTo(7));
             Assert.That(schema, Does.Contain("ApiVersion"));
             Assert.That(schema, Does.Contain("Child.Value1"));
             Assert.That(schema, Does.Contain("Child.Value2"));
@@ -125,12 +123,6 @@ namespace Ripe.Sdk.Tests
 
             var provider = new RipeConfigurationProvider<MockRipeConfig>(mockSdk);
             provider.Load();
-            bool tryTtl = provider.TryGet("TimeToLive", out string? ttl);
-            Assert.Multiple(() =>
-            {
-                Assert.That(tryTtl, Is.True);
-                Assert.That(ttl, Is.EqualTo("300"));
-            });
             bool tryApiVersion = provider.TryGet("ApiVersion", out string? apiVersion);
             Assert.Multiple(() =>
             {
@@ -178,7 +170,7 @@ namespace Ripe.Sdk.Tests
         [Test]
         public void TestExtensionSetup()
         {
-            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig() { TimeToLive = 0 });
+            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig());
             var services = new ServiceCollection();
             var config = new ConfigurationBuilder()
                 .AddRipe<MockRipeConfig>(services, (httpClient, options) =>
@@ -187,6 +179,7 @@ namespace Ripe.Sdk.Tests
                     options.Uri = "https://test.com";
                     options.ApiKey = "rpri_testkey";
                     options.Version = "1.0.0.0";
+                    options.CacheExpiry = 0;
                 })
                 .Build();
             var provider = services.BuildServiceProvider();
@@ -199,7 +192,7 @@ namespace Ripe.Sdk.Tests
         [Test]
         public async Task TestExtensionSetupAsync()
         {
-            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig() { TimeToLive = 0 });
+            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig());
             var services = new ServiceCollection();
             var config = new ConfigurationBuilder()
                 .AddRipe<MockRipeConfig>(services, (httpClient, options) =>
@@ -208,6 +201,7 @@ namespace Ripe.Sdk.Tests
                     options.Uri = "https://test.com";
                     options.ApiKey = "rpri_testkey";
                     options.Version = "1.0.0.0";
+                    options.CacheExpiry = 0;
                 })
                 .Build();
             var provider = services.BuildServiceProvider();
@@ -216,35 +210,6 @@ namespace Ripe.Sdk.Tests
             await configService.HydrateAsync();
             await configService.HydrateAsync();
             Assert.That(requestHandler.Count, Is.EqualTo(5));
-        }
-        [Test]
-        public async Task TestExtensionSetupAsync_NewDataIncoming()
-        {
-            var requestHandler = new MockHttpMessageHandler(HttpStatusCode.OK, new MockRipeConfig() { TimeToLive = 0 });
-            var services = new ServiceCollection();
-            var config = new ConfigurationBuilder()
-                .AddRipe<MockRipeConfig>(services, (httpClient, options) =>
-                {
-                    httpClient.AssignHttpClientMessageHandler(requestHandler);
-                    options.Uri = "https://test.com";
-                    options.ApiKey = "rpri_testkey";
-                    options.Version = "1.0.0.0";
-                })
-                .Build();
-
-            var provider = services.BuildServiceProvider();
-            var configService = provider.GetRequiredService<IRipeSdk<MockRipeConfig>>();
-            var configObj = await configService.HydrateAsync();
-            Assert.That(configObj.TimeToLive, Is.EqualTo(0));
-            
-            // Assert that changes are reflected in the hydrated obj immediately
-            requestHandler.ResponseContent = new MockRipeConfig() { TimeToLive = 300 };
-            configObj = await configService.HydrateAsync();
-            Assert.Multiple(() =>
-            {
-                Assert.That(configObj.TimeToLive, Is.EqualTo(300));
-                Assert.That(configService.Expiry, Is.GreaterThan(DateTime.Now));
-            });
         }
         [Test]
         public async Task TestPropertyNameAttr_Outgoing()
@@ -266,8 +231,7 @@ namespace Ripe.Sdk.Tests
             Assert.That(requestObj["Version"]?.ToString(), Is.EqualTo("1.0.0.0"));
             var schema = JsonSerializer.Deserialize<string[]>(requestObj["Schema"]);
             Assert.That(schema, Is.Not.Null);
-            Assert.That(schema, Has.Length.EqualTo(7));
-            Assert.That(schema, Does.Contain("TimeToLive"));
+            Assert.That(schema, Has.Length.EqualTo(6));
             Assert.That(schema, Does.Contain("ApiVersion"));
             Assert.That(schema, Does.Contain("Test"));
             Assert.That(schema, Does.Contain("Child.TestAttribute"));
@@ -279,7 +243,6 @@ namespace Ripe.Sdk.Tests
 
     public class MockRipeConfig : IRipeConfiguration
     {
-        public int TimeToLive { get; set; } = 300;
         public string ApiVersion { get; set; } = "";
         public MockRipeConfigChild Child { get; set; } = new();
         public MockRipeConfigChild1 Child1 { get; set; } = new();
@@ -302,7 +265,6 @@ namespace Ripe.Sdk.Tests
     }
     public class MockRipeConfig2 : IRipeConfiguration
     {
-        public int TimeToLive { get; set; } = 300;
         public string ApiVersion { get; set; } = "";
         [RipePropertyName("Test")]
         public string TestAttribute { get; set; } = "";

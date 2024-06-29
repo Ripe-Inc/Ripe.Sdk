@@ -21,5 +21,9 @@ namespace Ripe.Sdk.Tests
                 Content = JsonContent.Create(new { Data = ResponseContent })
             });
         }
+        protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+            return SendAsync(request, cancellationToken).Result;
+        }
     }
 }

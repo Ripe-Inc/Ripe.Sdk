@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+#if NET5_0_OR_GREATER
+using System.IO;
+#endif
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
