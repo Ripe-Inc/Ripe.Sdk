@@ -19,16 +19,24 @@ namespace Ripe.Sdk.DependencyInjection
             return new RipeConfigurationProvider<T>(_sdk);
         }
     }
-
+    /// <summary>
+    /// Ripe implementation of the <see cref="ConfigurationProvider"/>
+    /// </summary>
+    /// <typeparam name="T">Your configuration object which implements <see cref="IRipeConfiguration"/></typeparam>
     public class RipeConfigurationProvider<T> : ConfigurationProvider
         where T : class, IRipeConfiguration
     {
         private readonly IRipeSdk<T> _sdk;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="RipeConfigurationProvider{T}"/>
+        /// </summary>
+        /// <param name="sdk">The Core SDK implementation</param>
         public RipeConfigurationProvider(IRipeSdk<T> sdk)
         {
             _sdk = sdk;
         }
+        /// <inheritdoc/>
         public override void Load()
         {
             T config = _sdk.Hydrate();

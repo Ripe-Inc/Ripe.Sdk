@@ -6,6 +6,9 @@ using System.Net.Http;
 
 namespace Ripe.Sdk.DependencyInjection
 {
+    /// <summary>
+    /// A collection of static helper methods for initializing Ripe Dependency Injection
+    /// </summary>
     public static class RipeConfigExtensions
     {
         /// <summary>
