@@ -1,5 +1,8 @@
 ﻿namespace Ripe.Sdk.Core
 {
+    /// <summary>
+    /// Interface to implement on your configuration objects
+    /// </summary>
     public interface IRipeConfiguration
     {
         /// <summary>
