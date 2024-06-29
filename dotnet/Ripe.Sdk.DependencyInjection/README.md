@@ -7,7 +7,7 @@ The Ripe Dependency Injection package includes extensions for integrating with t
 into `IConfiguration`, as well as inject your config as a scoped service which is automatically refreshed in regular intervals.
 
 ## Getting Started
-Follow the guide [here](https://github.com/matt-andrews/Ripe.Sdk/tree/main/Ripe.Sdk.Core) to learn how to create an `IRipeConfiguration` object to base your configuration on. 
+Follow the guide [here](../Ripe.Sdk.Core/README.md) to learn how to create an `IRipeConfiguration` object to base your configuration on. 
 
 Install Ripe.Sdk.DependencyInjection
 ```

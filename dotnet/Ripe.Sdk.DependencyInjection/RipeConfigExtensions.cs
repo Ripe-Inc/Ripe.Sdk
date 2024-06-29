@@ -28,7 +28,7 @@ namespace Ripe.Sdk.DependencyInjection
 
         /// <summary>
         /// Add the specified Ripe configuration to your <see cref="IConfigurationBuilder"/> and inject the built configuration as a Scoped Service. 
-        /// The configuration will automatically refresh values based on Ripe environment caching details
+        /// The configuration will automatically refresh values based on the <see cref="IRipeOptions.CacheExpiry"/> value.
         /// </summary>
         /// <typeparam name="TConfig">The <see cref="IRipeConfiguration"/> that defines your Ripe configuration</typeparam>
         /// <param name="builder"></param>
@@ -43,7 +43,7 @@ namespace Ripe.Sdk.DependencyInjection
 
         /// <summary>
         /// Add the specified Ripe configuration to your <see cref="IConfigurationBuilder"/> and inject the built configuration as a Scoped Service. 
-        /// The configuration will automatically refresh values based on Ripe environment caching details.
+        /// The configuration will automatically refresh values based on the <see cref="IRipeOptions.CacheExpiry"/> value.
         /// </summary>
         /// <typeparam name="TConfig">The <see cref="IRipeConfiguration"/> that defines your Ripe configuration</typeparam>
         /// <param name="builder"></param>

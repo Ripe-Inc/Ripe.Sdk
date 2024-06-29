@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+#if NET5_0_OR_GREATER
+using System.IO;
+#endif
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -109,7 +112,7 @@ namespace Ripe.Sdk.Core
                     if (obj.Data != null)
                     {
                         _cache = obj.Data;
-                        Expiry = DateTime.Now.AddSeconds(_cache.TimeToLive);
+                        Expiry = DateTime.Now.AddSeconds(_options.CacheExpiry);
                     }
                 }
                 else
@@ -148,8 +151,16 @@ namespace Ripe.Sdk.Core
                     Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
                 };
 
-                HttpResponseMessage response = _httpClient.SendAsync(msg).Result;
-                string content = response.Content.ReadAsStringAsync().Result;
+                HttpResponseMessage response;
+                string content;
+#if NET5_0_OR_GREATER
+                response = _httpClient.Send(msg);
+                using var reader = new StreamReader(response.Content.ReadAsStream());
+                content = reader.ReadToEnd();
+#else
+                response = _httpClient.SendAsync(msg).Result;
+                content = response.Content.ReadAsStringAsync().Result;
+#endif
                 if (response.IsSuccessStatusCode)
                 {
                     var obj = JsonSerializer.Deserialize<HydrationResponse<TConfig>>(content, _serializerOptions)
@@ -157,7 +168,7 @@ namespace Ripe.Sdk.Core
                     if (obj.Data != null)
                     {
                         _cache = obj.Data;
-                        Expiry = DateTime.Now.AddSeconds(_cache.TimeToLive);
+                        Expiry = DateTime.Now.AddSeconds(_options.CacheExpiry);
                     }
                 }
                 else
