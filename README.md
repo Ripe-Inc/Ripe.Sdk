@@ -4,5 +4,5 @@ Welcome to the Ripe Sdk repository! More information can be found at [https://ri
 
 To get started, pick your language below:
 
-[dotnet](dotnet/README.md)
-[node](node/ripesdk/README.md)
+* [dotnet](dotnet/README.md)
+* [node](node/ripesdk/README.md)
