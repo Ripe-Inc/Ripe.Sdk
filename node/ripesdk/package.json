@@ -1,0 +1,31 @@
+{
+  "name": "@ripe-innovations-inc/ripe-sdk",
+  "version": "1.0.2",
+  "description": "An SDK to facilitate connecting to Ripe's configuration environments",
+  "main": "src/ripe-sdk.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ripe-Inc/ripe-sdks.git"
+  },
+  "keywords": [
+    "ripe",
+    "config"
+  ],
+  "author": "Matthew Andrews",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ripe-Inc/ripe-sdks/issues"
+  },
+  "homepage": "https://ripecloud.io",
+  "dependencies": {
+    "isomorphic-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/node-fetch": "^2.6.11"
+  },
+  "type": "module"
+}
