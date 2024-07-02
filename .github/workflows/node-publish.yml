@@ -21,7 +21,7 @@ jobs:
           node-version: '20.x'
           registry-url: 'https://registry.npmjs.org'
       - name: Install dependencies and build
-        run: npm ci && npm run build
+        run: npm ci && npm run
         working-directory: ./node/ripesdk/
       - name: Publish package on NPM
         run: npm publish
